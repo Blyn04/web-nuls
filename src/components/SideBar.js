@@ -44,6 +44,10 @@ const Sidebar = () => {
         setSelectedKey("5");
         break;
 
+      case "/accounts":
+        setSelectedKey("7");
+        break;
+
       default:
         setSelectedKey("1");
         break;
@@ -78,6 +82,10 @@ const Sidebar = () => {
 
       case "6":
         confirmSignOut();
+        break;
+
+      case "7":
+        navigate("/accounts", { replace: true });
         break;
 
       default:
@@ -163,6 +171,11 @@ const Sidebar = () => {
             icon: <LogoutOutlined />,
             label: "Sign Out",
             danger: true, 
+          },
+          {
+            key: "7",
+            icon: <LogoutOutlined />,
+            label: "Accounts",
           },
         ]}
       />

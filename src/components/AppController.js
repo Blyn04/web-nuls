@@ -7,6 +7,7 @@ import PendingRequest from './admin/PendingRequest';
 import BorrowCatalog from './admin/BorrowCatalog';
 import History from './admin/History';
 import Profile from './Profile';
+import AccountManagement from './superAdmin/AccountManagement';
 
 const AppController = () => {
     
@@ -20,6 +21,7 @@ const AppController = () => {
                 <Route path="/borrow-catalog" element={<BorrowCatalog />} />
                 <Route path="/history" element={<History />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/accounts" element={<AccountManagement />} />
             </Routes>
         </BrowserRouter>
     )
