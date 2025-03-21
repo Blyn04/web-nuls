@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Card, Col, Row } from "antd";
+import { Layout, Card, Col, Row, Modal, Button } from "antd";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import Sidebar from "./SideBar";
 import AppHeader from "./Header";
@@ -23,6 +23,15 @@ const pieData = [
   { name: "Drinks", value: 20 },
   { name: "Fruits", value: 20 },
 ];
+
+const testModal = () => {
+  Modal.confirm({
+    title: "Test Modal",
+    content: "Is this working?",
+    okText: "OK",
+    cancelText: "Cancel",
+  });
+};
 
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7300", "#ff4d4f"];
 

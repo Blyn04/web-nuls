@@ -6,6 +6,7 @@ import Inventory from './admin/Inventory';
 import PendingRequest from './admin/PendingRequest';
 import BorrowCatalog from './admin/BorrowCatalog';
 import History from './admin/History';
+import Profile from './Profile';
 
 const AppController = () => {
     
@@ -18,6 +19,7 @@ const AppController = () => {
                 <Route path="/pending-request" element={<PendingRequest />} />
                 <Route path="/borrow-catalog" element={<BorrowCatalog />} />
                 <Route path="/history" element={<History />} />
+                <Route path="/profile" element={<Profile />} />
             </Routes>
         </BrowserRouter>
     )

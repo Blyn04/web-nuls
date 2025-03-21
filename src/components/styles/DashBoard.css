@@ -10,6 +10,22 @@
     display: none !important;
 }
 
+/* Ensure modal appears on top */
+.ant-modal-root {
+  z-index: 1050 !important;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.user-profile:hover {
+  opacity: 0.8;
+  transition: 0.2s;
+}
+
 /* Logo Container - Flex to Align Button Next to Name */
 .logo-container {
   display: flex;
