@@ -8,6 +8,7 @@ import BorrowCatalog from './admin/BorrowCatalog';
 import History from './admin/History';
 import Profile from './Profile';
 import AccountManagement from './superAdmin/AccountManagement';
+import Requisition from './users/Requisition';
 
 const AppController = () => {
     
@@ -22,6 +23,7 @@ const AppController = () => {
                 <Route path="/history" element={<History />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/accounts" element={<AccountManagement />} />
+                <Route path="/requisition" element={<Requisition />} />
             </Routes>
         </BrowserRouter>
     )
