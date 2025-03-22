@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Layout, Menu, Modal } from "antd";
+import React, { useState, useEffect, memo } from "react";
+import { Layout, Menu } from "antd";
 import {
   DashboardOutlined,
   UnorderedListOutlined,
@@ -9,17 +9,23 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   LogoutOutlined,
+  UserOutlined,
+  FileDoneOutlined,
+  SnippetsOutlined,
+  ClockCircleOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
-import "./styles/DashBoard.css";
+import CustomModal from "./CustomModal"; // ✅ Import Custom Modal
+import "./styles/SideBar.css";
 
 const { Sider } = Layout;
 
-const Sidebar = () => {
+const Sidebar = memo(() => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedKey, setSelectedKey] = useState("");
+  const [showModal, setShowModal] = useState(false); // ✅ Track modal visibility
 
   useEffect(() => {
     const path = location.pathname.replace(/\/$/, "");
@@ -27,39 +33,30 @@ const Sidebar = () => {
       case "/dashboard":
         setSelectedKey("1");
         break;
-
       case "/inventory":
         setSelectedKey("2");
         break;
-
       case "/pending-request":
         setSelectedKey("3");
         break;
-
       case "/borrow-catalog":
         setSelectedKey("4");
         break;
-
       case "/history":
         setSelectedKey("5");
         break;
-
       case "/accounts":
         setSelectedKey("7");
         break;
-
       case "/requisition":
         setSelectedKey("8");
         break;
-
       case "/request-list":
         setSelectedKey("9");
         break;
-
       case "/activity-log":
         setSelectedKey("10");
         break;
-
       default:
         setSelectedKey("1");
         break;
@@ -75,61 +72,42 @@ const Sidebar = () => {
       case "1":
         navigate("/dashboard", { replace: true });
         break;
-
       case "2":
         navigate("/inventory", { replace: true });
         break;
-
       case "3":
         navigate("/pending-request", { replace: true });
         break;
-
       case "4":
         navigate("/borrow-catalog", { replace: true });
         break;
-
       case "5":
         navigate("/history", { replace: true });
         break;
-
       case "6":
-        confirmSignOut();
+        setShowModal(true); // ✅ Trigger Custom Modal
         break;
-
       case "7":
         navigate("/accounts", { replace: true });
         break;
-
       case "8":
         navigate("/requisition", { replace: true });
         break;
-
       case "9":
         navigate("/request-list", { replace: true });
         break;
-
       case "10":
         navigate("/activity-log", { replace: true });
         break;
-
       default:
         break;
     }
   };
 
-  const confirmSignOut = () => {
-    console.log("Sign out confirmation triggered"); // Debug
-    Modal.confirm({
-      title: "Sign Out",
-      content: "Are you sure you want to sign out?",
-      okText: "Yes",
-      cancelText: "No",
-      onOk: () => {
-        localStorage.clear();
-        navigate("/login", { replace: true });
-      },
-    });
-  };  
+  const handleSignOut = () => {
+    localStorage.clear();
+    navigate("/", { replace: true });
+  };
 
   return (
     <Sider
@@ -139,7 +117,6 @@ const Sidebar = () => {
       className="sidebar"
       trigger={null}
     >
-
       <div className="logo-container" onClick={toggleSidebar}>
         <div className="logo">
           {!collapsed ? (
@@ -151,7 +128,6 @@ const Sidebar = () => {
             <h3 className="logo-title">NU</h3>
           )}
         </div>
-
         {collapsed ? (
           <MenuUnfoldOutlined className="toggle-icon" />
         ) : (
@@ -194,32 +170,39 @@ const Sidebar = () => {
             key: "6",
             icon: <LogoutOutlined />,
             label: "Sign Out",
-            danger: true, 
+            danger: true,
           },
           {
             key: "7",
-            icon: <LogoutOutlined />,
+            icon: <UserOutlined />,
             label: "Accounts",
           },
           {
             key: "8",
-            icon: <LogoutOutlined />,
+            icon: <FileDoneOutlined />,
             label: "Requisition",
           },
           {
             key: "9",
-            icon: <LogoutOutlined />,
+            icon: <SnippetsOutlined />,
             label: "Request List",
           },
           {
             key: "10",
-            icon: <LogoutOutlined />,
+            icon: <ClockCircleOutlined />,
             label: "Activity Log",
           },
         ]}
       />
+
+      {/* ✅ Custom Modal for Sign Out */}
+      <CustomModal
+        visible={showModal}
+        onConfirm={handleSignOut}
+        onCancel={() => setShowModal(false)}
+      />
     </Sider>
   );
-};
+});
 
 export default Sidebar;
