@@ -9,6 +9,7 @@ import History from './admin/History';
 import Profile from './Profile';
 import AccountManagement from './superAdmin/AccountManagement';
 import Requisition from './users/Requisition';
+import RequestList from './users/RequestList';
 
 const AppController = () => {
     
@@ -24,6 +25,7 @@ const AppController = () => {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/accounts" element={<AccountManagement />} />
                 <Route path="/requisition" element={<Requisition />} />
+                <Route path="/request-list" element={<RequestList />} />
             </Routes>
         </BrowserRouter>
     )

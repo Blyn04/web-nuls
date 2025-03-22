@@ -52,6 +52,10 @@ const Sidebar = () => {
         setSelectedKey("8");
         break;
 
+      case "/request-list":
+        setSelectedKey("9");
+        break;
+
       default:
         setSelectedKey("1");
         break;
@@ -94,6 +98,10 @@ const Sidebar = () => {
 
       case "8":
         navigate("/requisition", { replace: true });
+        break;
+
+      case "9":
+        navigate("/request-list", { replace: true });
         break;
 
       default:
@@ -189,6 +197,11 @@ const Sidebar = () => {
             key: "8",
             icon: <LogoutOutlined />,
             label: "Requisition",
+          },
+          {
+            key: "9",
+            icon: <LogoutOutlined />,
+            label: "Request List",
           },
         ]}
       />
