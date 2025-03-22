@@ -22,6 +22,7 @@ const Inventory = () => {
   const [itemName, setItemName] = useState("");
   const [itemId, setItemId] = useState("");
   const qrRefs = useRef({});
+  const [pageTitle, setPageTitle] = useState("");
 
   const handleAdd = (values) => {
     if (!itemName || !itemId) {
@@ -108,10 +109,11 @@ const Inventory = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sidebar />
+      <Sidebar setPageTitle={setPageTitle} />
 
       <Layout>
-        <AppHeader />
+        <AppHeader pageTitle={pageTitle} />
+
         <Content className="content inventory-container">
 
           <div className="inventory-header">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Layout, Card, Col, Row, Modal, Button } from "antd";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import Sidebar from "./SideBar";
@@ -24,25 +24,19 @@ const pieData = [
   { name: "Fruits", value: 20 },
 ];
 
-const testModal = () => {
-  Modal.confirm({
-    title: "Test Modal",
-    content: "Is this working?",
-    okText: "OK",
-    cancelText: "Cancel",
-  });
-};
-
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7300", "#ff4d4f"];
 
 const Dashboard = () => {
+  const [pageTitle, setPageTitle] = useState("");
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       
-      <Sidebar />
+      <Sidebar setPageTitle={setPageTitle} />
 
       <Layout>
-        <AppHeader />
+        <AppHeader pageTitle={pageTitle} />
+
         <Content className="content">
           <Row gutter={[16, 16]}>
 

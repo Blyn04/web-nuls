@@ -6,7 +6,7 @@ import "./styles/DashBoard.css";
 
 const { Header } = Layout;
 
-const AppHeader = () => {
+const AppHeader =  ({ pageTitle }) => {
   const navigate = useNavigate(); 
 
   const goToProfile = () => {
@@ -15,6 +15,8 @@ const AppHeader = () => {
 
   return (
     <Header className="header">
+     <h2 className="header-title">{pageTitle}</h2>
+
       <div className="user-profile" onClick={goToProfile} style={{ cursor: "pointer" }}>
         <span style={{ marginRight: 8 }}>Hi, Nathan!</span>
         <Avatar icon={<UserOutlined />} />

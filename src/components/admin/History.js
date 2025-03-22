@@ -8,6 +8,8 @@ const { Content } = Layout;
 const { Title, Text } = Typography;
 
 const History = () => {
+  const [pageTitle, setPageTitle] = useState("");
+
   const [historyData, setHistoryData] = useState([
     {
       id: "1",
@@ -125,9 +127,11 @@ const History = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sidebar />
+      <Sidebar setPageTitle={setPageTitle} />
+
       <Layout>
-        <AppHeader />
+        <AppHeader pageTitle={pageTitle} />
+        
         <Content style={{ margin: "20px" }}>
           <Title level={2} style={{ marginBottom: 20 }}>
             📜 History

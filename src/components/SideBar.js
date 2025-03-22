@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from "react";
+import React, { useState, useEffect} from "react";
 import { Layout, Menu } from "antd";
 import {
   DashboardOutlined,
@@ -20,48 +20,67 @@ import "./styles/SideBar.css";
 
 const { Sider } = Layout;
 
-const Sidebar = memo(() => {
+const Sidebar = ({ setPageTitle }) => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedKey, setSelectedKey] = useState("");
-  const [showModal, setShowModal] = useState(false); // ✅ Track modal visibility
+  const [showModal, setShowModal] = useState(false); 
 
   useEffect(() => {
     const path = location.pathname.replace(/\/$/, "");
     switch (path.toLowerCase()) {
       case "/dashboard":
         setSelectedKey("1");
+        setPageTitle("Dashboard");
         break;
+
       case "/inventory":
         setSelectedKey("2");
+        setPageTitle("Inventory");
         break;
+
       case "/pending-request":
         setSelectedKey("3");
+        setPageTitle("Pending Requests");
         break;
+
       case "/borrow-catalog":
         setSelectedKey("4");
+        setPageTitle("Borrow Catalog");
         break;
+
       case "/history":
         setSelectedKey("5");
+        setPageTitle("History");
         break;
+
       case "/accounts":
         setSelectedKey("7");
+        setPageTitle("Accounts");
         break;
+
       case "/requisition":
         setSelectedKey("8");
+        setPageTitle("Requisition");
         break;
+
       case "/request-list":
         setSelectedKey("9");
+        setPageTitle("Request List");
         break;
+
       case "/activity-log":
         setSelectedKey("10");
+        setPageTitle("Activity Log");
         break;
+
       default:
         setSelectedKey("1");
+        setPageTitle("Dashboard");
         break;
     }
-  }, [location.pathname]);
+  }, [location.pathname, setPageTitle]);
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
@@ -70,39 +89,58 @@ const Sidebar = memo(() => {
   const handleMenuClick = (e) => {
     switch (e.key) {
       case "1":
-        navigate("/dashboard", { replace: true });
+        navigate("/dashboard");
+        if (typeof setPageTitle === "function") setPageTitle("Dashboard");
         break;
+  
       case "2":
-        navigate("/inventory", { replace: true });
+        navigate("/inventory");
+        if (typeof setPageTitle === "function") setPageTitle("Inventory");
         break;
+  
       case "3":
-        navigate("/pending-request", { replace: true });
+        navigate("/pending-request");
+        if (typeof setPageTitle === "function") setPageTitle("Pending Requests");
         break;
+  
       case "4":
-        navigate("/borrow-catalog", { replace: true });
+        navigate("/borrow-catalog");
+        if (typeof setPageTitle === "function") setPageTitle("Borrow Catalog");
         break;
+  
       case "5":
-        navigate("/history", { replace: true });
+        navigate("/history");
+        if (typeof setPageTitle === "function") setPageTitle("History");
         break;
+  
       case "6":
-        setShowModal(true); // ✅ Trigger Custom Modal
+        setShowModal(true);
         break;
+  
       case "7":
-        navigate("/accounts", { replace: true });
+        navigate("/accounts");
+        if (typeof setPageTitle === "function") setPageTitle("Accounts");
         break;
+  
       case "8":
-        navigate("/requisition", { replace: true });
+        navigate("/requisition");
+        if (typeof setPageTitle === "function") setPageTitle("Requisition");
         break;
+  
       case "9":
-        navigate("/request-list", { replace: true });
+        navigate("/request-list");
+        if (typeof setPageTitle === "function") setPageTitle("Request List");
         break;
+  
       case "10":
-        navigate("/activity-log", { replace: true });
+        navigate("/activity-log");
+        if (typeof setPageTitle === "function") setPageTitle("Activity Log");
         break;
+  
       default:
         break;
     }
-  };
+  };  
 
   const handleSignOut = () => {
     localStorage.clear();
@@ -195,7 +233,6 @@ const Sidebar = memo(() => {
         ]}
       />
 
-      {/* ✅ Custom Modal for Sign Out */}
       <CustomModal
         visible={showModal}
         onConfirm={handleSignOut}
@@ -203,6 +240,6 @@ const Sidebar = memo(() => {
       />
     </Sider>
   );
-});
+};
 
 export default Sidebar;

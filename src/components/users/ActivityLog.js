@@ -60,6 +60,7 @@ const columns = [
 
 const ActivityLog = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [pageTitle, setPageTitle] = useState("");
 
   const filteredData = activityData.filter(
     (item) =>
@@ -70,9 +71,11 @@ const ActivityLog = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sidebar />
+      <Sidebar setPageTitle={setPageTitle} />
+
       <Layout className="site-layout">
-        <AppHeader />
+        <AppHeader pageTitle={pageTitle} />
+        
         <Content className="activity-content">
           <div className="activity-header">
             <Title level={3}>

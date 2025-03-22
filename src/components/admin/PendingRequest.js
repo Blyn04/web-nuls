@@ -8,6 +8,7 @@ const { Content } = Layout;
 const { Title, Text } = Typography;
 
 const PendingRequest = () => {
+  const [pageTitle, setPageTitle] = useState("");
   const [requests, setRequests] = useState([
     {
       id: "Req0002",
@@ -52,6 +53,7 @@ const PendingRequest = () => {
     if (selectedRequest) {
       // Move selected request to approved list
       setApprovedRequests([...approvedRequests, selectedRequest]);
+      
       // Remove from pending list
       setRequests(requests.filter((req) => req.id !== selectedRequest.id));
 
@@ -83,9 +85,11 @@ const PendingRequest = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sidebar />
+      <Sidebar setPageTitle={setPageTitle} />
+
       <Layout>
-        <AppHeader />
+        <AppHeader pageTitle={pageTitle} />
+
         <Content style={{ margin: "20px" }}>
           <Title level={2} style={{ marginBottom: 20 }}>
             📋 Pending Requests

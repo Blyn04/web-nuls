@@ -108,6 +108,7 @@ const columns = [
 const RequestList = () => {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [isCancelVisible, setIsCancelVisible] = useState(false);
+  const [pageTitle, setPageTitle] = useState("");
 
   const handleRowClick = (record) => {
     setSelectedRequest(record);
@@ -121,10 +122,11 @@ const RequestList = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sidebar />
+      <Sidebar setPageTitle={setPageTitle} />
 
       <Layout className="site-layout">
-        <AppHeader />
+        <AppHeader pageTitle={pageTitle} />
+
         <Content className="pending-content">
           <div className="pending-header">
             <Title level={3}>

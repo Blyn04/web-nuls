@@ -20,6 +20,7 @@ const { Title, Text } = Typography;
 const { Search } = Input;
 
 const BorrowCatalog = () => {
+  const [pageTitle, setPageTitle] = useState("");
   const [catalog, setCatalog] = useState([
     {
       id: "1",
@@ -51,20 +52,17 @@ const BorrowCatalog = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
 
-  // Handle search
   const handleSearch = (value) => {
     setSearchQuery(value);
   };
 
-  // Filter catalog based on search query
   const filteredCatalog = catalog.filter(
     (item) =>
       item.requestor.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.itemDescription.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.itemId.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  // Table columns
+ 
   const columns = [
     {
       title: "Requestor",
@@ -96,13 +94,11 @@ const BorrowCatalog = () => {
     },
   ];
 
-  // Handle view details
   const handleViewDetails = (record) => {
     setSelectedRequest(record);
     setIsModalVisible(true);
   };
 
-  // Handle close modal
   const handleCancel = () => {
     setIsModalVisible(false);
     setSelectedRequest(null);
@@ -110,9 +106,11 @@ const BorrowCatalog = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sidebar />
+      <Sidebar setPageTitle={setPageTitle} />
+
       <Layout>
-        <AppHeader />
+        <AppHeader pageTitle={pageTitle} />
+        
         <Content style={{ margin: "20px" }}>
           <Title level={2} style={{ marginBottom: 20 }}>
             📚 Borrow Catalog

@@ -12,6 +12,7 @@ const Profile = () => {
   const [form] = Form.useForm();
   const [formData, setFormData] = useState(null);
   const [imageUrl, setImageUrl] = useState(null); 
+  const [pageTitle, setPageTitle] = useState("Profile");
 
   const onFinish = (values) => {
     const profileData = { ...values, imageUrl };
@@ -32,10 +33,10 @@ const Profile = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sidebar />
+      <Sidebar setPageTitle={setPageTitle} />
 
       <Layout className="site-layout">
-        <AppHeader className="profile-header" />
+        <AppHeader className="profile-header" pageTitle={"Profile"} />
 
         <Content className="profile-content">
             <Row justify="center" align="middle" style={{ width: "100%" }}>

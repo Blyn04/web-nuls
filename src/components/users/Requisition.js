@@ -49,8 +49,8 @@ const Requisition = () => {
   const [reason, setReason] = useState("");
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
   const [isFinalizeVisible, setIsFinalizeVisible] = useState(false);
+  const [pageTitle, setPageTitle] = useState("");
 
-  // Add item to request list
   const addToList = (item) => {
     const alreadyAdded = requestList.find((req) => req.id === item.id);
     if (alreadyAdded) {
@@ -60,13 +60,11 @@ const Requisition = () => {
     }
   };
 
-  // Remove item from request list
   const removeFromList = (id) => {
     const updatedList = requestList.filter((item) => item.id !== id);
     setRequestList(updatedList);
   };
 
-  // Update quantity of item
   const updateQuantity = (id, value) => {
     const updatedList = requestList.map((item) =>
       item.id === id ? { ...item, quantity: value } : item
@@ -74,7 +72,6 @@ const Requisition = () => {
     setRequestList(updatedList);
   };
 
-  // Handle finalize request
   const finalizeRequest = () => {
     if (!dateRequired) {
       message.error("Please select a date!");
@@ -84,10 +81,9 @@ const Requisition = () => {
       message.error("Please add items to the request list!");
       return;
     }
-    setIsFinalizeVisible(true); // Open Finalize Modal
+    setIsFinalizeVisible(true); 
   };
 
-  // Table columns
   const columns = [
     {
       title: "ID",
@@ -132,11 +128,11 @@ const Requisition = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      {/* Sidebar */}
-      <Sidebar />
+      <Sidebar setPageTitle={setPageTitle} />
+
       <Layout className="site-layout">
-        {/* Header */}
-        <AppHeader />
+        <AppHeader pageTitle={pageTitle} />
+        
         <Content className="requisition-content">
           <div className="requisition-header">
             <h2>Requisition</h2>
@@ -147,7 +143,6 @@ const Requisition = () => {
             />
           </div>
 
-          {/* Item Table */}
           <Table
             dataSource={items}
             columns={columns}
@@ -155,7 +150,6 @@ const Requisition = () => {
             className="requisition-table"
           />
 
-          {/* Request List */}
           <div className="request-list-container">
             <h3>Request List:</h3>
             {requestList.map((item) => (
@@ -198,7 +192,6 @@ const Requisition = () => {
             ))}
           </div>
 
-          {/* Date & Reason Container */}
           <div className="request-details">
             <div className="date-required">
               <strong>Date Required:</strong>
@@ -232,7 +225,6 @@ const Requisition = () => {
               />
             </div>
 
-            {/* Finalize Button */}
             <Button
               type="primary"
               danger
@@ -244,7 +236,6 @@ const Requisition = () => {
             </Button>
           </div>
 
-          {/* Finalize Request Modal */}
           <Modal
             title={
               <div style={{ background: "#f60", padding: "12px", color: "#fff" }}>

@@ -23,6 +23,7 @@ const AccountManagement = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingAccount, setEditingAccount] = useState(null);
   const [form] = Form.useForm();
+  const [pageTitle, setPageTitle] = useState("");
 
   useEffect(() => {
     setAccounts([
@@ -43,7 +44,6 @@ const AccountManagement = () => {
     ]);
   }, []);
 
-  // Show Modal for Add/Edit
   const showModal = (account) => {
     if (account) {
       setEditingAccount(account);
@@ -55,7 +55,6 @@ const AccountManagement = () => {
     setIsModalVisible(true);
   };
 
-  // Save or Update Account
   const handleSave = (values) => {
     if (editingAccount) {
       const updatedAccounts = accounts.map((acc) =>
@@ -71,14 +70,12 @@ const AccountManagement = () => {
     setIsModalVisible(false);
   };
 
-  // Delete Account
   const handleDelete = (id) => {
     const updatedAccounts = accounts.filter((acc) => acc.id !== id);
     setAccounts(updatedAccounts);
     message.success("Account deleted successfully!");
   };
 
-  // Table Columns
   const columns = [
     {
       title: "Name",
@@ -125,9 +122,11 @@ const AccountManagement = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sidebar />
+      <Sidebar setPageTitle={setPageTitle} />
+
       <Layout className="site-layout">
-        <AppHeader />
+        <AppHeader pageTitle={pageTitle} />
+
         <Content className="account-content">
           <div className="account-header">
             <h2>Account Management</h2>
