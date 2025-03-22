@@ -60,6 +60,7 @@ const columns = [
 
 const ActivityLog = () => {
   const [searchQuery, setSearchQuery] = useState("");
+
   const filteredData = activityData.filter(
     (item) =>
       item.date.includes(searchQuery) ||
@@ -93,6 +94,7 @@ const ActivityLog = () => {
             pagination={false}
             bordered
             className="activity-table"
+            rowClassName="activity-row"
             locale={{
               emptyText: (
                 <div className="empty-row">
