@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { Layout, Card, Col, Row, Modal, Button } from "antd";
+import React, { useState, useEffect } from "react";
+import { Layout, Card, Col, Row, Modal, Button, message, notification  } from "antd";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { useLocation } from "react-router-dom";
 import Sidebar from "./SideBar";
 import AppHeader from "./Header";
 import "./styles/DashBoard.css";
@@ -20,7 +21,7 @@ const pieData = [
   { name: "Dairy/Frozen", value: 25 },
   { name: "Meat/Bread", value: 20 },
   { name: "Snacks", value: 15 },
-  { name: "Drinks", value: 20 },
+  { name: "Drinks", value: 20 },  
   { name: "Fruits", value: 20 },
 ];
 
@@ -28,6 +29,23 @@ const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7300", "#ff4d4f"];
 
 const Dashboard = () => {
   const [pageTitle, setPageTitle] = useState("");
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.loginSuccess === undefined) {
+      console.log("No loginSuccess detected.");
+    }
+  
+    if (location.state?.loginSuccess === true) {
+      notification.success({
+        message: "Login Successful",
+        description: "Welcome to the Dashboard!",
+        placement: "topRight",
+        duration: 3,
+      });
+    }
+  }, [location.state]);
+  
 
   return (
     <Layout style={{ minHeight: "100vh" }}>

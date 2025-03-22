@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom"; 
 import "./styles/Login.css";
 
 const Login = () => {
@@ -21,9 +21,8 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Logging in with:", formData);
-    alert("Login Successful!");
 
-    navigate("/dashboard");
+    navigate("/dashboard", { state: { loginSuccess: true } });
   };
 
   const openModal = () => {
