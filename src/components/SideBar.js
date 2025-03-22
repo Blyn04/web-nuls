@@ -56,6 +56,10 @@ const Sidebar = () => {
         setSelectedKey("9");
         break;
 
+      case "/activity-log":
+        setSelectedKey("10");
+        break;
+
       default:
         setSelectedKey("1");
         break;
@@ -102,6 +106,10 @@ const Sidebar = () => {
 
       case "9":
         navigate("/request-list", { replace: true });
+        break;
+
+      case "10":
+        navigate("/activity-log", { replace: true });
         break;
 
       default:
@@ -202,6 +210,11 @@ const Sidebar = () => {
             key: "9",
             icon: <LogoutOutlined />,
             label: "Request List",
+          },
+          {
+            key: "10",
+            icon: <LogoutOutlined />,
+            label: "Activity Log",
           },
         ]}
       />
