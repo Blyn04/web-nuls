@@ -50,7 +50,7 @@ const Dashboard = () => {
       <Sidebar setPageTitle={setPageTitle} />
 
       <Layout>
-        <AppHeader pageTitle={pageTitle} />
+        <AppHeader pageTitle={pageTitle}  role={location.state?.role} />
 
         <Content className="content">
           <Row gutter={[16, 16]}>

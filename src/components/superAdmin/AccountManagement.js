@@ -7,13 +7,23 @@ import {
   Form,
   Input,
   Select,
-  Popconfirm,
   message,
 } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { useLocation, useNavigate } from "react-router-dom";
+import { db } from "../../backend/firebase/FirebaseConfig";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import Sidebar from "../SideBar";
 import AppHeader from "../Header";
 import "../styles/superAdminStyle/AccountManagement.css";
+import SuccessModal from "../customs/SuccessModal";
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -24,27 +34,87 @@ const AccountManagement = () => {
   const [editingAccount, setEditingAccount] = useState(null);
   const [form] = Form.useForm();
   const [pageTitle, setPageTitle] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [adminCredentials, setAdminCredentials] = useState(null);
+  const [isPasswordModalVisible, setIsPasswordModalVisible] = useState(false);
+  const [password, setPassword] = useState("");
+  const [actionType, setActionType] = useState("");
+  const [selectedAccountId, setSelectedAccountId] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
+  // Fetch Super Admin Credentials on component load
   useEffect(() => {
-    setAccounts([
-      {
-        id: 1,
-        name: "Nathan",
-        email: "nathan@example.com",
-        department: "Nursing",
-        role: "Admin",
-      },
-      {
-        id: 2,
-        name: "Mariana",
-        email: "mariana@example.com",
-        department: "Medical Technology",
-        role: "User",
-      },
-    ]);
+    fetchAdminCredentials();
   }, []);
 
-  const showModal = (account) => {
+  const fetchAdminCredentials = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "super-admin"));
+      if (!querySnapshot.empty) {
+        const adminData = querySnapshot.docs[0].data(); // Get first document
+        setAdminCredentials(adminData);
+      } else {
+        console.error("No super admin credentials found.");
+        message.error("Super admin credentials not found!");
+      }
+    } catch (error) {
+      console.error("Error fetching super admin credentials:", error);
+      message.error("Failed to load admin credentials.");
+    }
+  };
+
+  // Handle Password Confirmation Before Edit/Delete
+  const handlePasswordConfirm = () => {
+    if (adminCredentials && password === adminCredentials.password) {
+      if (actionType === "edit") {
+        const accountToEdit = accounts.find((acc) => acc.id === selectedAccountId);
+        showModalHandler(accountToEdit); // Open edit modal
+      } else if (actionType === "delete") {
+        handleDelete(selectedAccountId); // Delete account
+      }
+      message.success("Password confirmed!");
+      setIsPasswordModalVisible(false);
+      setPassword("");
+    } else {
+      message.error("Incorrect password. Please try again.");
+    }
+  };
+
+  // Show Password Modal for Edit
+  const confirmEdit = (account) => {
+    setActionType("edit");
+    setSelectedAccountId(account.id);
+    setIsPasswordModalVisible(true);
+  };
+
+  // Show Password Modal for Delete
+  const confirmDelete = (id) => {
+    setActionType("delete");
+    setSelectedAccountId(id);
+    setIsPasswordModalVisible(true);
+  };
+
+  // Fetch Accounts on component load
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "accounts"));
+        const accountList = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setAccounts(accountList);
+      } catch (error) {
+        console.error("Error fetching accounts:", error);
+        message.error("Failed to load accounts.");
+      }
+    };
+
+    fetchAccounts();
+  }, []);
+
+  const showModalHandler = (account) => {
     if (account) {
       setEditingAccount(account);
       form.setFieldsValue(account);
@@ -55,25 +125,47 @@ const AccountManagement = () => {
     setIsModalVisible(true);
   };
 
-  const handleSave = (values) => {
+  const handleSave = async (values) => {
     if (editingAccount) {
-      const updatedAccounts = accounts.map((acc) =>
-        acc.id === editingAccount.id ? { ...acc, ...values } : acc
-      );
-      setAccounts(updatedAccounts);
-      message.success("Account updated successfully!");
+      try {
+        const accountRef = doc(db, "accounts", editingAccount.id);
+        await updateDoc(accountRef, values);
+
+        const updatedAccounts = accounts.map((acc) =>
+          acc.id === editingAccount.id ? { ...acc, ...values } : acc
+        );
+
+        setAccounts(updatedAccounts);
+        message.success("Account updated successfully!");
+      } catch (error) {
+        console.error("Error updating account:", error);
+        message.error("Failed to update account.");
+      }
     } else {
-      const newAccount = { ...values, id: Date.now() };
-      setAccounts([...accounts, newAccount]);
-      message.success("Account added successfully!");
+      try {
+        const docRef = await addDoc(collection(db, "accounts"), values);
+        const newAccount = { ...values, id: docRef.id };
+
+        setAccounts([...accounts, newAccount]);
+        message.success("Account added successfully!");
+      } catch (error) {
+        console.error("Error adding account:", error);
+        message.error("Failed to add account.");
+      }
     }
     setIsModalVisible(false);
   };
 
-  const handleDelete = (id) => {
-    const updatedAccounts = accounts.filter((acc) => acc.id !== id);
-    setAccounts(updatedAccounts);
-    message.success("Account deleted successfully!");
+  const handleDelete = async (id) => {
+    try {
+      await deleteDoc(doc(db, "accounts", id));
+      const updatedAccounts = accounts.filter((acc) => acc.id !== id);
+      setAccounts(updatedAccounts);
+      message.success("Account deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      message.error("Failed to delete account.");
+    }
   };
 
   const columns = [
@@ -105,16 +197,14 @@ const AccountManagement = () => {
           <Button
             type="link"
             icon={<EditOutlined />}
-            onClick={() => showModal(record)}
+            onClick={() => confirmEdit(record)}
           />
-          <Popconfirm
-            title="Are you sure to delete this account?"
-            onConfirm={() => handleDelete(record.id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="link" danger icon={<DeleteOutlined />} />
-          </Popconfirm>
+          <Button
+            type="link"
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => confirmDelete(record.id)}
+          />
         </>
       ),
     },
@@ -123,23 +213,20 @@ const AccountManagement = () => {
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sidebar setPageTitle={setPageTitle} />
-
       <Layout className="site-layout">
-        <AppHeader pageTitle={pageTitle} />
-
+        <AppHeader pageTitle={pageTitle} role={location.state?.role} />
         <Content className="account-content">
           <div className="account-header">
             <h2>Account Management</h2>
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => showModal(null)}
+              onClick={() => showModalHandler(null)}
             >
               Add Account
             </Button>
           </div>
 
-          {/* Account Table */}
           <Table
             dataSource={accounts}
             columns={columns}
@@ -147,7 +234,7 @@ const AccountManagement = () => {
             className="account-table"
           />
 
-          {/* Modal for Add/Edit Account */}
+          {/* Add/Edit Account Modal */}
           <Modal
             title={editingAccount ? "Edit Account" : "Add Account"}
             open={isModalVisible}
@@ -180,16 +267,10 @@ const AccountManagement = () => {
                 <Input placeholder="Enter Email" />
               </Form.Item>
 
-              {/* Department Field */}
               <Form.Item
                 name="department"
                 label="Department"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select a department!",
-                  },
-                ]}
+                rules={[{ required: true, message: "Please select a department!" }]}
               >
                 <Select placeholder="Select Department">
                   <Option value="Nursing">Nursing</Option>
@@ -207,11 +288,28 @@ const AccountManagement = () => {
                 <Select placeholder="Select Role">
                   <Option value="Admin">Admin</Option>
                   <Option value="User">User</Option>
-                  <Option value="Super Admin">Super Admin</Option>
                 </Select>
               </Form.Item>
             </Form>
           </Modal>
+
+          {/* Password Confirmation Modal */}
+          <Modal
+            title="Confirm Password"
+            open={isPasswordModalVisible}
+            onCancel={() => setIsPasswordModalVisible(false)}
+            onOk={handlePasswordConfirm}
+            okText="Confirm"
+          >
+            <p>Please enter your password to proceed:</p>
+            <Input.Password
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter Password"
+            />
+          </Modal>
+
+          <SuccessModal isVisible={showModal} onClose={() => setShowModal(false)} />
         </Content>
       </Layout>
     </Layout>

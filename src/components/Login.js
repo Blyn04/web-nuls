@@ -18,6 +18,7 @@ const Login = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false); 
 
   const navigate = useNavigate();
 
@@ -38,8 +39,7 @@ const Login = () => {
       const { email, password } = formData;
 
       if (email === adminCredentials.email && password === adminCredentials.password) {
-        alert("Logged in as Admin!");
-        navigate("/dashboard", { state: { loginSuccess: true, role: "super-admin" } });
+        navigate("/accounts", { state: { loginSuccess: true, role: "super-admin" } });
 
       } else {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -69,6 +69,7 @@ const Login = () => {
       await sendPasswordResetEmail(auth, resetEmail);
       alert(`Password reset link sent to ${resetEmail}`);
       closeModal();
+      
     } catch (error) {
       console.error("Error sending reset link:", error.message);
       alert("Error sending password reset link. Please check your email.");
@@ -79,6 +80,10 @@ const Login = () => {
     if (e.target.classList.contains("modal-overlay")) {
       closeModal();
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -99,16 +104,24 @@ const Login = () => {
             />
           </div>
 
-          <div className="form-group">
+          <div className="form-group password-group">
             <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              placeholder="Enter your password"
-            />
+            <div className="password-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                placeholder="Enter your password"
+              />
+              <span
+                className="toggle-password"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? "🔒" : "👁️"}
+              </span>
+            </div>
           </div>
 
           <button type="submit" className="login-btn">

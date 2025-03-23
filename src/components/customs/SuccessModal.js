@@ -13,7 +13,7 @@ const SuccessModal = ({ isVisible, onClose }) => {
         </Button>,
       ]}
     >
-      <p>Welcome to the Dashboard!</p>
+      <p>Login Successful!!</p>
     </Modal>
   );
 };
