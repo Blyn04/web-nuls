@@ -15,7 +15,7 @@ import {
   ClockCircleOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
-import CustomModal from "./CustomModal"; // ✅ Import Custom Modal
+import CustomModal from "./customs/CustomModal";
 import "./styles/SideBar.css";
 
 const { Sider } = Layout;

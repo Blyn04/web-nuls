@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, Button } from "antd";
-import "./styles/CustomModal.css";
+import "../styles/customs/CustomModal.css";
 
 const CustomModal = ({ visible, onConfirm, onCancel }) => {
   if (!visible) return null;

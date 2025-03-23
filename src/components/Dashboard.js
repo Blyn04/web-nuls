@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import Sidebar from "./SideBar";
 import AppHeader from "./Header";
 import "./styles/DashBoard.css";
+import SuccessModal from "./customs/SuccessModal";
 
 const { Content } = Layout;
 
@@ -29,22 +30,18 @@ const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7300", "#ff4d4f"];
 
 const Dashboard = () => {
   const [pageTitle, setPageTitle] = useState("");
+  const [showModal, setShowModal] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
-    if (location.state?.loginSuccess === undefined) {
-      console.log("No loginSuccess detected.");
-    }
-  
     if (location.state?.loginSuccess === true) {
-      notification.success({
-        message: "Login Successful",
-        description: "Welcome to the Dashboard!",
-        placement: "topRight",
-        duration: 3,
-      });
+      setShowModal(true);
     }
   }, [location.state]);
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
   
 
   return (
@@ -106,6 +103,8 @@ const Dashboard = () => {
             </Col>
           </Row>
         </Content>
+
+        <SuccessModal isVisible={showModal} onClose={closeModal} />
       </Layout>
     </Layout>
   );
