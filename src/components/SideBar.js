@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Layout, Menu } from "antd";
 import {
   DashboardOutlined,
@@ -25,9 +25,13 @@ const Sidebar = ({ setPageTitle }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedKey, setSelectedKey] = useState("");
-  const [showModal, setShowModal] = useState(false); 
+  const [showModal, setShowModal] = useState(false);
+  const [role, setRole] = useState("");
 
   useEffect(() => {
+    const state = location.state || {};
+    setRole(state.role || "user");
+
     const path = location.pathname.replace(/\/$/, "");
     switch (path.toLowerCase()) {
       case "/dashboard":
@@ -92,60 +96,128 @@ const Sidebar = ({ setPageTitle }) => {
         navigate("/dashboard");
         if (typeof setPageTitle === "function") setPageTitle("Dashboard");
         break;
-  
+
       case "2":
         navigate("/inventory");
         if (typeof setPageTitle === "function") setPageTitle("Inventory");
         break;
-  
+
       case "3":
         navigate("/pending-request");
         if (typeof setPageTitle === "function") setPageTitle("Pending Requests");
         break;
-  
+
       case "4":
         navigate("/borrow-catalog");
         if (typeof setPageTitle === "function") setPageTitle("Borrow Catalog");
         break;
-  
+
       case "5":
         navigate("/history");
         if (typeof setPageTitle === "function") setPageTitle("History");
         break;
-  
+
       case "6":
         setShowModal(true);
         break;
-  
+
       case "7":
         navigate("/accounts");
         if (typeof setPageTitle === "function") setPageTitle("Accounts");
         break;
-  
+
       case "8":
         navigate("/requisition");
         if (typeof setPageTitle === "function") setPageTitle("Requisition");
         break;
-  
+
       case "9":
         navigate("/request-list");
         if (typeof setPageTitle === "function") setPageTitle("Request List");
         break;
-  
+
       case "10":
         navigate("/activity-log");
         if (typeof setPageTitle === "function") setPageTitle("Activity Log");
         break;
-  
+
       default:
         break;
     }
-  };  
+  };
 
   const handleSignOut = () => {
     localStorage.clear();
     navigate("/", { replace: true });
   };
+
+  const superAdminMenuItems = [
+    {
+      key: "7",
+      icon: <UserOutlined />,
+      label: "Accounts",
+    },
+    {
+      key: "6",
+      icon: <LogoutOutlined />,
+      label: "Sign Out",
+      danger: true,
+    },
+  ];
+
+  const regularMenuItems = [
+    {
+      key: "1",
+      icon: <DashboardOutlined />,
+      label: "Dashboard",
+    },
+    {
+      key: "2",
+      icon: <UnorderedListOutlined />,
+      label: "Inventory",
+    },
+    {
+      key: "3",
+      icon: <FileTextOutlined />,
+      label: "Pending Requests",
+    },
+    {
+      key: "4",
+      icon: <AppstoreOutlined />,
+      label: "Borrow Catalog",
+    },
+    {
+      key: "5",
+      icon: <HistoryOutlined />,
+      label: "History",
+    },
+    {
+      key: "7",
+      icon: <UserOutlined />,
+      label: "Accounts",
+    },
+    {
+      key: "8",
+      icon: <FileDoneOutlined />,
+      label: "Requisition",
+    },
+    {
+      key: "9",
+      icon: <SnippetsOutlined />,
+      label: "Request List",
+    },
+    {
+      key: "10",
+      icon: <ClockCircleOutlined />,
+      label: "Activity Log",
+    },
+    {
+      key: "6",
+      icon: <LogoutOutlined />,
+      label: "Sign Out",
+      danger: true,
+    },
+  ];
 
   return (
     <Sider
@@ -178,59 +250,7 @@ const Sidebar = ({ setPageTitle }) => {
         mode="vertical"
         selectedKeys={[selectedKey]}
         onClick={handleMenuClick}
-        items={[
-          {
-            key: "1",
-            icon: <DashboardOutlined />,
-            label: "Dashboard",
-          },
-          {
-            key: "2",
-            icon: <UnorderedListOutlined />,
-            label: "Inventory",
-          },
-          {
-            key: "3",
-            icon: <FileTextOutlined />,
-            label: "Pending Requests",
-          },
-          {
-            key: "4",
-            icon: <AppstoreOutlined />,
-            label: "Borrow Catalog",
-          },
-          {
-            key: "5",
-            icon: <HistoryOutlined />,
-            label: "History",
-          },
-          {
-            key: "6",
-            icon: <LogoutOutlined />,
-            label: "Sign Out",
-            danger: true,
-          },
-          {
-            key: "7",
-            icon: <UserOutlined />,
-            label: "Accounts",
-          },
-          {
-            key: "8",
-            icon: <FileDoneOutlined />,
-            label: "Requisition",
-          },
-          {
-            key: "9",
-            icon: <SnippetsOutlined />,
-            label: "Request List",
-          },
-          {
-            key: "10",
-            icon: <ClockCircleOutlined />,
-            label: "Activity Log",
-          },
-        ]}
+        items={role === "super-admin" ? superAdminMenuItems : regularMenuItems}
       />
 
       <CustomModal

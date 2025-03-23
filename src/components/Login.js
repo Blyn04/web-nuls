@@ -21,53 +21,47 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  // Default Admin Credentials
   const adminCredentials = {
     email: "mikmik@nu-moa.edu.ph",
     password: "mikmik",
   };
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle login submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const { email, password } = formData;
 
-      // Check if the credentials match the default admin
       if (email === adminCredentials.email && password === adminCredentials.password) {
         alert("Logged in as Admin!");
-        navigate("/dashboard", { state: { loginSuccess: true, role: "admin" } });
+        navigate("/dashboard", { state: { loginSuccess: true, role: "super-admin" } });
+
       } else {
-        // Authenticate with Firebase
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         console.log("User logged in:", userCredential.user);
         navigate("/dashboard", { state: { loginSuccess: true, role: "user" } });
       }
+
     } catch (error) {
       console.error("Error during login:", error.message);
       setError("Invalid email or password. Please try again.");
     }
   };
 
-  // Open reset password modal
   const openModal = () => {
     setIsModalOpen(true);
   };
 
-  // Close reset password modal
   const closeModal = () => {
     setIsModalOpen(false);
     setResetEmail("");
   };
 
-  // Handle password reset
   const handleResetSubmit = async (e) => {
     e.preventDefault();
 
@@ -81,7 +75,6 @@ const Login = () => {
     }
   };
 
-  // Handle overlay click to close modal
   const handleOverlayClick = (e) => {
     if (e.target.classList.contains("modal-overlay")) {
       closeModal();
