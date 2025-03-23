@@ -1,5 +1,12 @@
+// src/Login.js
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
+import {
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+} from "firebase/auth";
+import { auth } from "../backend/firebase/FirebaseConfig";
+
 import "./styles/Login.css";
 
 const Login = () => {
@@ -10,37 +17,71 @@ const Login = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
+  // Default Admin Credentials
+  const adminCredentials = {
+    email: "mikmik@nu-moa.edu.ph",
+    password: "mikmik",
+  };
+
+  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  // Handle login submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Logging in with:", formData);
 
-    navigate("/dashboard", { state: { loginSuccess: true } });
+    try {
+      const { email, password } = formData;
+
+      // Check if the credentials match the default admin
+      if (email === adminCredentials.email && password === adminCredentials.password) {
+        alert("Logged in as Admin!");
+        navigate("/dashboard", { state: { loginSuccess: true, role: "admin" } });
+      } else {
+        // Authenticate with Firebase
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log("User logged in:", userCredential.user);
+        navigate("/dashboard", { state: { loginSuccess: true, role: "user" } });
+      }
+    } catch (error) {
+      console.error("Error during login:", error.message);
+      setError("Invalid email or password. Please try again.");
+    }
   };
 
+  // Open reset password modal
   const openModal = () => {
     setIsModalOpen(true);
   };
 
+  // Close reset password modal
   const closeModal = () => {
     setIsModalOpen(false);
     setResetEmail("");
   };
 
-  const handleResetSubmit = (e) => {
+  // Handle password reset
+  const handleResetSubmit = async (e) => {
     e.preventDefault();
-    console.log("Reset link sent to:", resetEmail);
-    alert(`Password reset link sent to ${resetEmail}`);
-    closeModal();
+
+    try {
+      await sendPasswordResetEmail(auth, resetEmail);
+      alert(`Password reset link sent to ${resetEmail}`);
+      closeModal();
+    } catch (error) {
+      console.error("Error sending reset link:", error.message);
+      alert("Error sending password reset link. Please check your email.");
+    }
   };
 
+  // Handle overlay click to close modal
   const handleOverlayClick = (e) => {
     if (e.target.classList.contains("modal-overlay")) {
       closeModal();
@@ -51,6 +92,7 @@ const Login = () => {
     <div className="login-container">
       <div className="login-box">
         <h2 className="login-title">Login</h2>
+        {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Email</label>
